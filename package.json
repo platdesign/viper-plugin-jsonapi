@@ -1,0 +1,10 @@
+{
+  "name": "pd-project",
+  "description": "A new project by platdesign.de",
+  "version": "0.0.0",
+  "dependencies": {
+    "express": "^4.11.0",
+    "extend": "^2.0.0"
+  },
+  "repository": ""
+}
