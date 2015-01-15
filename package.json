@@ -1,7 +1,7 @@
 {
-  "name": "pd-project",
-  "description": "A new project by platdesign.de",
-  "version": "0.0.0",
+  "name": "viper-plugin-jsonapi",
+  "description": "viper-plugin-jsonapi",
+  "version": "0.0.1",
   "dependencies": {
     "express": "^4.11.0",
     "extend": "^2.0.0"

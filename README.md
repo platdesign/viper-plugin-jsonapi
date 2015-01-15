@@ -1,1 +1,1 @@
-#New Project
+#viper-plugin-jsonapi
