@@ -10,6 +10,10 @@ var extend = require('extend');
 var paramsReqAttr = 'jsonApiParams';
 var nonCustomHandlerNames = ['param', 'get', 'post', 'put', 'delete', 'getIndex'];
 
+var defaultConfig = {
+	path: './api',
+	baseRoute: '/api'
+};
 
 
 module.exports = function backend() {
@@ -44,10 +48,6 @@ module.exports = function backend() {
 };
 
 
-var defaultConfig = {
-	path: './api',
-	baseRoute: '/api'
-};
 
 
 
