@@ -32,9 +32,10 @@ module.exports = function backend() {
 
 				var apiPath = path.resolve( that.cwd(), args.path);
 
-				inject( dir2router(apiPath) ).then(function(apiRouter) {
+				inject( dir2router(apiPath, null, true) ).then(function(apiRouter) {
 					router.use(args.baseRoute, apiRouter);
 				}, function(err) {
+					console.log(err.stack)
 					console.log(err.message.red);
 				});
 
@@ -55,7 +56,7 @@ module.exports = function backend() {
 
 
 
-function dir2router(dir, parentHandler) {
+function dir2router(dir, parentHandler, isBaseDir) {
 
 	return function(inject) {
 		var router = express.Router();
@@ -119,8 +120,8 @@ function dir2router(dir, parentHandler) {
 		});
 
 
-		if( handlerObj.get && !handlerObj.param ) {
-			throw new Error('Missing param-name ('+dir+')');
+		if( !handlerObj.param ) {
+			handlerObj.param = path.basename(dir)+'Id';
 		}
 
 		var baseRoute = '/';
@@ -136,9 +137,15 @@ function dir2router(dir, parentHandler) {
 		// Helper to create handler and it to subRoutesParentObj
 		function createHandler (method, name, route) {
 			if( handlerObj[name] ) {
-				var handler = createApiRouteHandler( handlerObj[name] );
+
+				var obj = handlerObj[name];
+					obj.config = obj.config || {};
+					obj.config.route = obj.config.route || route;
+
+				var handler = createApiRouteHandler( obj );
+
 				subRoutesParentObj[name] = handler;
-				router[method](route, handler);
+				router[method](obj.config.route, handler);
 				return handler;
 			}
 		}
@@ -157,7 +164,6 @@ function dir2router(dir, parentHandler) {
 				obj.config = obj.config || {};
 			var route = obj.config.route || '/'+key;
 			var method = obj.config.method || 'get';
-
 			createHandler(method, key, route);
 		});
 
@@ -184,7 +190,9 @@ function dir2router(dir, parentHandler) {
 		// Create subRouters and use them in router
 		subFolders.forEach(function(dir) {
 			var resourceName = path.basename(dir);
-
+			if(isBaseDir) {
+				itemRoute = '';
+			}
 			router.use(itemRoute + '/' + resourceName, dir2router(dir, subRoutesParentObj)(inject));
 		});
 
