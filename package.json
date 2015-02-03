@@ -1,7 +1,7 @@
 {
   "name": "viper-plugin-jsonapi",
   "description": "viper-plugin-jsonapi",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "express": "^4.11.0",
     "extend": "^2.0.0"
