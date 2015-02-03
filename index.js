@@ -34,6 +34,15 @@ module.exports = function backend() {
 
 				inject( dir2router(apiPath, null, true) ).then(function(apiRouter) {
 					router.use(args.baseRoute, apiRouter);
+
+					router.use(args.baseRoute, function(err, req, res, next) {
+						res.status(err.status).json({
+							error: {
+								message: err.message
+							}
+						});
+					});
+
 				}, function(err) {
 					console.log(err.stack)
 					console.log(err.message.red);
@@ -81,7 +90,7 @@ function dir2router(dir, parentHandler, isBaseDir) {
 					});
 				}
 
-				return inject(handler, {
+				inject(handler, {
 					req:req,
 					res:res,
 					params: req.jsonApiParams,
@@ -89,12 +98,15 @@ function dir2router(dir, parentHandler, isBaseDir) {
 				}).then(function(result) {
 					res.json(result);
 				}, function(err) {
-					res.json({
+					res.status(err.status || 403).json({
 						error: {
 							message: err.message
 						}
 					});
+				}).catch(function(err) {
+					console.log(err.message, err.stack)
 				});
+
 
 			};
 		}
